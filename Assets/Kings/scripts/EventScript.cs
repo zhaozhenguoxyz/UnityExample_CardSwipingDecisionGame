@@ -9,8 +9,7 @@ using UnityEngine.Events;
 
 
 /// <summary>
-/// ???????????
-/// 본 클래스는 'EventScriptEditor'스크립트에서 에디팅되서 인스펙터에서 보여진다.
+/// 본 클래스는 유니티 이벤트를 사용하기 위한 클래스이다. 그리고 이 클래스를 인스펙터에서 내 편의에 맞게 에디터 확장하기 위해, 'EventScriptEditor'스크립트에서 에디팅하게 되어 인스펙터에서 보여진다.
 /// Game -> MainMenuCard
 /// </summary>
 public class EventScript : MonoBehaviour {
@@ -63,15 +62,16 @@ public class EventScript : MonoBehaviour {
 	public bool isHighPriorityCard = false;
 
     [Tooltip("drawable cards 카드는 그 상태때문에 무작위로 그려질 수 있습닏. Non drawable cards는 이전 카드 또는 게임 오버 통계와 같은 카드에 의해 정의된 후속 카드입니다.")]
-	public bool isDrawable = true;
+	public bool 그리기가능여부 = true;
 
 	[Tooltip("확률은 조건을 충족시킨 모든 카드에 적용됩니다. 높은 확률의 카드가 그려지기 쉽습니다.")]
 	[Range(0f,1f)] public float cardPropability = 1f;
-	[Tooltip("게임 당 최대 카드 뽑기를 제한하려면 'maxDraws'를 정의하십시오.")]
-	public int maxDraws = 100;
+
+    [Tooltip("게임 당 최대 카드 뽑기를 제한하려면 '그리기최대값'를 정의하십시오.")]
+	public int 그리기최대값 = 100;
 
 	[System.Serializable]
-	public class 콘디션
+	public class 컨디션
     {
         /// <summary>
         /// 게임에서 사용되는 이름, 돈, 카리스마등 모든 정의를 열거한 열거형 변수.
@@ -91,7 +91,7 @@ public class EventScript : MonoBehaviour {
 	}
 
 	[Tooltip("이 카드가 그려 질 수있는 조건 하에서 정의하십시오. 예 : 결혼 카드는 'age'값 유형이 18에서 100 사이이거나 '결혼'값 유형이 0 (결혼하지 않은 경우) 인 경우에만 가능해야합니다.")]
-	public 콘디션[] conditions;
+	public 컨디션[] 컨디션들;
 
 	[System.Serializable]
 	public class resultModifier
@@ -133,7 +133,7 @@ public class EventScript : MonoBehaviour {
 		public modifierGroup modifiers;
 
         [Tooltip("추가 조건에 따라 결과가 두 가지 결과로 나뉠 수 있습니다. 모든 조건이 참이면 'Modifiers True'가 실행됩니다. 조건 중 하나가 실패하면 'Modifiers False'입니다. 예 : 사용자는 그가 경주를하고 싶다고 선택했지만 그의 민첩성은 낮아 결과는 떨어질 것입니다.")]
-		public 콘디션[] conditions;
+		public 컨디션[] conditions;
 
         [Tooltip("모든 조건이 충족되는 경우 값 그룹이 변경됩니다.")]
 		public modifierGroup	modifiersTrue;
@@ -168,7 +168,7 @@ public class EventScript : MonoBehaviour {
     /// <summary>
     /// 인스펙터에 resultGroup 클래스에서 정의된 변수들을 노출하기 위한 변수.
     /// </summary>
-	public resultGroup Results;
+	public resultGroup 결과;
 
     /// <summary>
     /// 구성된 텍스트를 텍스트 필드로 번역하고 작성하십시오.
@@ -194,7 +194,7 @@ public class EventScript : MonoBehaviour {
 	 * This triggers the computation of the results for swiping LEFT and afterward the spawning of a new card.
 	 */
 	public void onLeftSwipe(){
-		result res = Results.resultLeft;
+		result res = 결과.resultLeft;
 		computeResult (res);
 		OnSwipeLeft.Invoke ();
 	}
@@ -205,7 +205,7 @@ public class EventScript : MonoBehaviour {
     /// </summary>
 	public void onRightSwipe()
     {
-		result res = Results.resultRight;
+		result res = 결과.resultRight;
 		computeResult (res);
 		OnSwipeRight.Invoke ();
 	}
@@ -288,7 +288,7 @@ public class EventScript : MonoBehaviour {
 
 			float rndResult = 1f;
 			ValueScript v = null;
-			foreach (콘디션 c in res.conditions) {
+			foreach (컨디션 c in res.conditions) {
 				rndResult = Random.Range (0f, 1f);
 				v = ValueManager.나자신.첫번째피팅값가져오기 (c.정의);
 
@@ -324,11 +324,11 @@ public class EventScript : MonoBehaviour {
 			Debug.LogError ("Path not reachable?");
 		}
 
-		foreach (resultModifier rm in  changeValueOnCardDespawn) {
+		foreach (resultModifier rm in  자동차스폰변경값) {
 			ValueManager.나자신.changeValue (rm.modifier, rm.valueAdd);
 		}
 			
-		OnCardDespawn.Invoke ();
+		카드디스폰.Invoke ();
 	}
 
 	//execution of a group of value modifications
@@ -350,11 +350,11 @@ public class EventScript : MonoBehaviour {
 	}
 
 	//check for a set of conditions if everything is met
-	bool AreConditinsForResultMet(콘디션[] cond){
+	bool AreConditinsForResultMet(컨디션[] cond){
 		
 		bool conditionOk = true;
 
-		foreach (EventScript.콘디션 c in cond) {
+		foreach (EventScript.컨디션 c in cond) {
 			if (ValueManager.나자신.GetConditionMet (c) == true) {
 				//condition is ok.
 			} else {
@@ -372,14 +372,14 @@ public class EventScript : MonoBehaviour {
 	}
 		
 	void Start () {
-		OnCardSpawn.Invoke ();
+		카드스폰.Invoke ();
 	}
 
 	[Tooltip("조건부 결과 계산 후 값 변경. 'Age +1'과 같이 값이 결과와 독립적으로 변경되는 경우 유용합니다.")]
-	public resultModifier[] changeValueOnCardDespawn;
+	public resultModifier[] 자동차스폰변경값;
 
-	public 유니티이벤트 OnCardSpawn;
-	public 유니티이벤트 OnCardDespawn;
+	public 유니티이벤트 카드스폰;
+	public 유니티이벤트 카드디스폰;
 
 	public 유니티이벤트 OnSwipeLeft;
 	public 유니티이벤트 OnSwipeRight;

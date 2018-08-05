@@ -3,36 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
+/// <summary>
+/// 'EventScript' 클래스를 에디터 확장하기 위한 클래스
+/// </summary>
 [CustomEditor(typeof(EventScript))] // 'EventScript'스크립트를 에디팅하는 애튜리뷰터
 public class EventScriptEditor : Editor {
 
-    // todo. 일단 직렬화에 대해 공부해야 함.
+    /// <summary>
+    /// 상속받은 OnInspectorGUI()를 오버라이드해서 구현해준다. 이 메서드를 구현함으로 인해  사용자 정의 GUI를 추가 할수 있다.
+    /// </summary>
     public override void OnInspectorGUI ()
 	{
+        /// todo. 작업중.
 		showScriptField ();
 
-		직렬화된요소표시 ("텍스트필드"); /// EventScript클래스의 변수 '텍스트필드'를 표시
-        직렬화된요소표시 ("isDrawable");
+		직렬화된요소표시 ("텍스트필드"); /// 작업중. EventScript클래스의 변수 '텍스트필드'를 직렬화해서 가져와야 한다.
+        직렬화된요소표시 ("그리기가능여부"); /// 작업중.
 
 		EventScript es = (EventScript)serializedObject.targetObject;
 
-		if (es.isDrawable == true) {
+		if (es.그리기가능여부 == true) {
 			직렬화된요소표시 ("isHighPriorityCard");
 
 			if (es.isHighPriorityCard == false) {
 				직렬화된요소표시 ("cardPropability");
 			}
-				직렬화된요소표시 ("maxDraws");
+				직렬화된요소표시 ("그리기최대값"); /// 'EventScript'클래스의 변수인 '그리기최대값'을 직렬화된요소로 표시한다.
 
 		}
 
-		직렬화된요소표시 ("conditions");
-		직렬화된요소표시 ("Results");
-		직렬화된요소표시 ("changeValueOnCardDespawn");
-		직렬화된요소표시 ("OnCardSpawn");
-		직렬화된요소표시 ("OnCardDespawn");
+		직렬화된요소표시 ("컨디션들"); // 'EventScript'클래스의 변수인 '컨디션들'을 직렬화된요소로 표시한다.
+		직렬화된요소표시("결과"); // 'EventScript'클래스의 변수인 '결과'를 직렬화된요소로 표시한다.
+		직렬화된요소표시("자동차스폰변경값"); // 'EventScript'클래스의 변수인 '자동차출발값변경값'을 직렬화된요소로 표시한다.
+        직렬화된요소표시 ("카드스폰"); // 'EventScript'클래스의 변수인 '카드스폰'을 직렬화된요소로 표시한다.
+        직렬화된요소표시 ("카드디스폰");  // 'EventScript'클래스의 변수인 '카드디스폰'을 직렬화된요소로 표시한다.
 
-		직렬화된요소표시 ("OnSwipeLeft");
+        직렬화된요소표시 ("OnSwipeLeft");
 		직렬화된요소표시 ("OnSwipeRight");
 
 		GUILayout.Space (15);
@@ -69,9 +76,12 @@ public class EventScriptEditor : Editor {
             serializedObject.ApplyModifiedProperties();
     }
 
-	void showScriptField(){
-		//show the script field
-		serializedObject.Update();
+    /// <summary>
+    /// 스크립트 필드를 보여주는 메서드이다.
+    /// </summary>
+	void showScriptField()
+    {
+		serializedObject.Update(); /// 직렬화된 오브젝트를 갱신해줘서, 스크립트의 필드를 보여준다.
 		SerializedProperty prop = serializedObject.FindProperty("m_Script");
 		GUI.enabled = false;
 		EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
@@ -151,7 +161,7 @@ public class ModifierDrawer : PropertyDrawer
 
 
 // ConditionDrawer
-[CustomPropertyDrawer(typeof(EventScript.콘디션))]
+[CustomPropertyDrawer(typeof(EventScript.컨디션))]
 public class ConditionDrawer : PropertyDrawer
 {
 	// Draw the property inside the given rect

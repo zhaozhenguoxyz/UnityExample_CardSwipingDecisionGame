@@ -86,7 +86,7 @@ public class ValueManager : MonoBehaviour {
     /// <param name="cond"></param>
     /// <param name="showDebug"></param>
     /// <returns></returns>
-    public bool GetConditionMet(EventScript.콘디션 cond, bool showDebug = false){
+    public bool GetConditionMet(EventScript.컨디션 cond, bool showDebug = false){
 		
 		foreach (ValueScript vs in 볼륨스크립트리스트) {
 			if (vs.내역활 == cond.정의) {
@@ -111,11 +111,11 @@ public class ValueManager : MonoBehaviour {
 	}
 
 	//check for a set of conditions if everything is met
-	public bool AreConditinsForResultMet(EventScript.콘디션[] cond){
+	public bool AreConditinsForResultMet(EventScript.컨디션[] cond){
 
 		bool conditionOk = true;
 
-		foreach (EventScript.콘디션 c in cond) {
+		foreach (EventScript.컨디션 c in cond) {
 			if (GetConditionMet (c) == true) {
 				//condition is ok.
 			} else {

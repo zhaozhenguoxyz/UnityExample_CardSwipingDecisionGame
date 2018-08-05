@@ -32,7 +32,7 @@ public class ValueDependentGameLogs : TranslatableContent {
 	[System.Serializable]
 	public class valueLog{
 
-		public EventScript.콘디션 condition;
+		public EventScript.컨디션 condition;
 		public string logConditionMet = "";
 
 	}

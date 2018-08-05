@@ -15,11 +15,13 @@ public class CardStack :  TranslatableContent {
 	public class CardCategory
 	{
 		[Tooltip("구분하기 쉽게 배열그룹(요소)이름을 넣어주세요.")]
-		public string groupName;
+		public string 그룹이름;
 
-        //todo. 작업중.
+        /// <summary>
+        /// 이 변수는 인스펙터에서 노출될때 에디팅 된 형태로 노출된다.
+        /// </summary>
 		[Tooltip("이 그룹의 사전 조건. 카드 자체의 조건은 낮은 우선 순위로 계산됩니다.")]
-		public EventScript.콘디션[] subStackCondition;
+		public EventScript.컨디션[] 서브스택컨디션;
 
         /// <summary>
         /// 미리 만들어둔 카드를 등록하는 배열 변수.
@@ -534,18 +536,18 @@ public class CardStack :  TranslatableContent {
 
 		for (int i = 0; i<allCards.Length; i++) {
 			//test, if condition for group is met
-			if (ValueManager.나자신.AreConditinsForResultMet (allCards[i].subStackCondition ) == true) {
+			if (ValueManager.나자신.AreConditinsForResultMet (allCards[i].서브스택컨디션 ) == true) {
 
 				//if the group condition is true, test the cards from the group
 				for (int j = 0; j < allCards [i].groupCards.Length; j++) {
 					es = allCards [i].groupCards [j].GetComponent<EventScript> ();
 					conditionOk = true;
 
-					if (cardDrawCount.cnt [i].drawCnt [j] >= es.maxDraws) {
+					if (cardDrawCount.cnt [i].drawCnt [j] >= es.그리기최대값) {
 						conditionOk = false;
 					}
 
-					foreach (EventScript.콘디션 c in es.conditions) {
+					foreach (EventScript.컨디션 c in es.컨디션들) {
 						if (ValueManager.나자신.GetConditionMet (c) == true) {
 							//condition is ok.
 						} else {
@@ -554,7 +556,7 @@ public class CardStack :  TranslatableContent {
 						}
 					}
 
-					if (conditionOk == true && es.isDrawable == true) {
+					if (conditionOk == true && es.그리기가능여부 == true) {
 						if (es.isHighPriorityCard == true) {
 							highPriorityCards.Add (allCards [i].groupCards [j]);
 						} else {
@@ -643,7 +645,7 @@ public class CardStack :  TranslatableContent {
 				testGameObject = allCards [i].groupCards [j];
 
 				if (testGameObject == null) {
-					Debug.LogWarning ("Element of 'allCards' (group index: " + i.ToString () + ", sub index: " + j.ToString () + ") in group '" + allCards [i].groupName + "': Prefab/Gameobject is missing"); 
+					Debug.LogWarning ("Element of 'allCards' (group index: " + i.ToString () + ", sub index: " + j.ToString () + ") in group '" + allCards [i].그룹이름 + "': Prefab/Gameobject is missing"); 
 				}
 
 				//test against all cards
@@ -653,7 +655,7 @@ public class CardStack :  TranslatableContent {
 							if (testGameObject == allCards [k].groupCards [l]) {
 								//if the same card is with different index is detected (the object compared with itself): inform the user
 								if ( !(i==k && j==l) ) {
-									Debug.LogWarning ("Duplicate of card '" + testGameObject.name + "' in group '" + allCards [i].groupName + "' found (group index: " + i.ToString () + ", sub index: " + j.ToString () + "): in group '" + allCards [k].groupName + "' (group index: " + k.ToString () + ", sub index: " + l.ToString () + ")");
+									Debug.LogWarning ("Duplicate of card '" + testGameObject.name + "' in group '" + allCards [i].그룹이름 + "' found (group index: " + i.ToString () + ", sub index: " + j.ToString () + "): in group '" + allCards [k].그룹이름 + "' (group index: " + k.ToString () + ", sub index: " + l.ToString () + ")");
 									allDuplicatesCounter++;
 								}
 							}
